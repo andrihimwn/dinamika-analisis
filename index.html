@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MIL DAC MASTER FINAL 2026 — EXCEL GRAPHS FINAL4</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
+<style>
+:root{--bg:#071018;--panel:#0d1a24;--panel2:#102431;--line:#1e3b4b;--txt:#eaf5f7;--muted:#8da7b1;--accent:#35d6b0;--accent2:#54a8ff;--warn:#ffbd5a;--danger:#ff6b7a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0,#123043 0,#071018 42%,#050b10 100%);color:var(--txt);font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+header{padding:22px 20px 18px;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(5,12,17,.92);backdrop-filter:blur(12px);z-index:10}
+.brand{display:flex;align-items:center;gap:14px}.logo{width:48px;height:48px;border:1px solid #2e796f;border-radius:14px;display:grid;place-items:center;background:#0d282d;font-weight:900;color:var(--accent);font-size:18px}.brand h1{font-size:20px;margin:0}.brand p{margin:3px 0 0;color:var(--muted);font-size:12px}
+nav{display:flex;gap:7px;overflow:auto;padding-top:15px}nav button,.btn{border:1px solid var(--line);background:#0b1821;color:#cfe0e5;border-radius:9px;padding:9px 12px;cursor:pointer;white-space:nowrap}nav button.active,.btn.primary{background:#123b3a;border-color:#2b897d;color:#eafffa}nav button:hover,.btn:hover{border-color:#397184}
+main{max-width:1500px;margin:auto;padding:18px}.tab{display:none}.tab.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}.card{background:linear-gradient(145deg,rgba(15,31,42,.95),rgba(8,20,28,.96));border:1px solid var(--line);border-radius:15px;padding:15px;box-shadow:0 10px 30px #0003}.span3{grid-column:span 3}.span4{grid-column:span 4}.span6{grid-column:span 6}.span8{grid-column:span 8}.span12{grid-column:span 12}
+h2{font-size:16px;margin:0 0 12px}.sub{color:var(--muted);font-size:12px;line-height:1.55}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.field{margin:9px 0}.field label{display:block;color:#9db6bf;font-size:11px;margin-bottom:5px}.field input,.field select,.field textarea{width:100%;background:#07131b;border:1px solid #244352;color:var(--txt);border-radius:8px;padding:9px}.field textarea{min-height:100px;font-family:inherit}.kpi{font-size:25px;font-weight:800;margin:6px 0}.kpi small{font-size:11px;color:var(--muted);font-weight:500}.badge{display:inline-block;border:1px solid #2d5a67;border-radius:20px;padding:4px 9px;font-size:11px;color:#b8d4dc}.ok{color:var(--accent)}.warn{color:var(--warn)}.danger{color:var(--danger)}
+.tablewrap{overflow:auto;max-height:520px;border:1px solid var(--line);border-radius:10px}table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:8px;border-bottom:1px solid #183340;text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left}th{position:sticky;top:0;background:#102531;color:#cde2e8;z-index:2}.empty{text-align:center;padding:35px;color:var(--muted)}.hintbox{background:#07131b;border:1px solid #244352;border-radius:9px;padding:10px;color:#9db6bf;font-size:11px;line-height:1.5}
+canvas{width:100%!important;max-height:380px}.diagram{min-height:270px;background:#07131a;border:1px dashed #315766;border-radius:12px;position:relative;overflow:hidden}.node{position:absolute;background:#12303b;border:1px solid #397889;border-radius:10px;padding:9px 12px;cursor:move;user-select:none}.node b{font-size:12px}.edge{color:var(--accent);font-weight:900}
+pre.code{background:#061018;border:1px solid #203e4c;border-radius:10px;padding:12px;overflow:auto;color:#bfe6dd;font-size:12px}
+footer{text-align:center;color:#607d88;font-size:11px;padding:25px}
+@media(max-width:900px){.span3,.span4,.span6,.span8{grid-column:span 12}.grid{gap:10px}main{padding:10px}.kpi{font-size:22px}}
+
+.sd-group{border:1px solid #214252;border-radius:12px;background:linear-gradient(145deg,#0a1821,#08141c);margin:10px 0;overflow:hidden}
+.sd-summary{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;background:transparent;border:0;color:var(--txt);cursor:pointer;text-align:left}
+.sd-summary:hover{background:#0d202b}
+.sd-title{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800}
+.sd-info{width:19px;height:19px;border:1px solid #397889;border-radius:50%;display:grid;place-items:center;color:#78d9ff;font-size:10px}
+.sd-value{color:#9fc2cc;font-size:11px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:58%}
+.sd-chevron{color:#6f9aa8;font-size:11px;transition:.2s}
+.sd-group.open .sd-chevron{transform:rotate(180deg)}
+.sd-detail{display:none;padding:0 12px 12px;border-top:1px solid #183642}
+.sd-group.open .sd-detail{display:block}
+.sd-detail .field{margin:9px 0 0}
+.sd-help{font-size:10px;color:#7795a0;line-height:1.45;margin-top:7px}
+.sd-mini{font-size:10px;color:#6e8b96;margin-top:3px}
+.sd-run{margin-top:12px;width:100%;padding:11px 14px}
+
+</style>
+</head>
+<body>
+<header>
+<div class="brand"><div class="logo">DAC</div><div><h1>DYNAMIC ANALYTICS CALCULATOR <span class="badge">MASTER FINAL</span></h1><p>Flexible Data-Driven Modeling, Simulation & Statistical Analysis Engine</p></div></div>
+<nav id="nav">
+<button class="active" data-tab="dashboard">Dashboard</button><button data-tab="data">Data</button><button data-tab="stats">Statistics</button><button data-tab="simulation">Simulation</button><button data-tab="scenario">Scenario</button><button data-tab="graph">Graph</button><button data-tab="analyzer">Analyzer</button><button data-tab="export">Export</button>
+</nav>
+</header>
+<main>
+<section id="dashboard" class="tab active">
+<div class="grid">
+<div class="card span12"><h2>MIL DAC — Universal Analytics Workspace</h2><p class="sub">Masukkan dataset apa pun. DAC membaca struktur data, memberi indikasi tipe analisis, lalu DAC mengarahkan pengguna ke analisis, simulasi, skenario, dan keputusan. <b>Data menentukan model — bukan model memaksa data.</b></p></div>
+<div class="card span3"><span class="badge">ROWS</span><div class="kpi" id="kRows">0</div><small class="sub">jumlah observasi</small></div>
+<div class="card span3"><span class="badge">NUMERIC</span><div class="kpi" id="kNum">0</div><small class="sub">variabel numerik</small></div>
+<div class="card span3"><span class="badge">TIME</span><div class="kpi" id="kTime">—</div><small class="sub">variabel waktu</small></div>
+<div class="card span3"><span class="badge">MODEL</span><div class="kpi" id="kModel">Auto</div><small class="sub">rekomendasi DAC</small></div>
+<div class="card span6"><h2>Auto-Detection</h2><div id="recommendations" class="sub">Belum ada data. Import Excel/CSV atau gunakan data demo.</div></div>
+<div class="card span6"><h2>Workflow</h2><div class="sub">① Input → ② Detect → ③ Calculate → ④ Scenario → ⑤ Analyze → ⑥ Export</div></div>
+</div>
+</section>
+
+<section id="data" class="tab">
+<div class="grid">
+<div class="card span4"><h2>Import Dataset</h2><p class="sub">Excel dan CSV menjadi format input utama. Excel diproses di browser; tidak dikirim ke server oleh tool ini.</p>
+<input id="fileInput" type="file" accept=".xlsx,.xls,.csv" class="field">
+<div class="row"><button class="btn primary" id="demoBtn">Load Demo</button><button class="btn" id="clearBtn">Clear</button></div>
+<div class="field"><label>Nama Dataset</label><input id="datasetName" value="DAC_Dataset"></div>
+</div>
+<div class="card span8"><h2>Dataset Preview</h2><p class="sub" id="dataRunStatus">Dataset belum dimuat. Pilih Excel/CSV atau Load Demo.</p><div id="activeSheetInfo" class="hintbox" style="margin:8px 0;display:none"></div><div id="dataPreview" class="empty">Belum ada dataset.</div></div>
+</div>
+</section>
+
+
+
+
+
+<section id="stats" class="tab">
+<div class="grid">
+<div class="card span4"><h2>Statistics</h2>
+<p class="sub">Ringkas: pilih analisis, variabel, lalu hitung.</p>
+<div class="field"><label>Analysis</label><select id="statType"><option value="desc">Descriptive</option><option value="corr">Correlation</option><option value="reg">Regression</option><option value="anova">ANOVA</option></select></div>
+<div id="statControls"><div class="hintbox">Import dataset atau Load Demo.</div></div>
+<button class="btn primary" id="runStats">Calculate</button>
+</div>
+<div class="card span8"><h2>Result & Conclusion</h2><div id="statResult" class="sub">Belum dihitung.</div><hr style="border:0;border-top:1px solid #183340;margin:14px 0"><div id="statConclusion" class="hintbox">Kesimpulan analisis akan muncul di sini.</div></div>
+</div>
+</section>
+
+<section id="simulation" class="tab">
+<div class="grid">
+<div class="card span4"><h2>System Dynamics Engine</h2>
+<p class="sub">Atur parameter simulasi secara langsung. Dataset digunakan sebagai input analitik; parameter di panel ini mengendalikan mesin System Dynamics.</p>
+
+<div class="field"><label>Start Year</label><input id="simStart" type="number" value="2026"></div>
+<div class="field"><label>End Year</label><input id="simEnd" type="number" value="2046"></div>
+<div class="field"><label>Initial Stock</label><input id="simStock" type="number" value="680000"></div>
+<div class="field"><label>Growth Rate (%/year)</label><input id="simGrowth" type="number" value="1.2" step=".1"></div>
+<div class="field"><label>Output per Stock Unit</label><input id="simOutput" type="number" value=".70" step=".01"></div>
+<div class="field"><label>Output Conversion / Unit</label><input id="simConv" type="number" value="1" step=".01"></div>
+<div class="field"><label>Capacity</label><input id="simCap" type="number" value="500"></div>
+<div class="field"><label>STEP Start Year</label><input id="stepYear" type="number" value="2031"></div>
+<div class="field"><label>STEP Reduction (%)</label><input id="stepPct" type="number" value="10" step=".1"></div>
+<div class="field"><label>PULSE Year</label><input id="pulseYear" type="number" value="2030"></div>
+<div class="field"><label>PULSE Reduction (%)</label><input id="pulsePct" type="number" value="15" step=".1"></div>
+<div class="field"><label>Planned Capacity</label><input id="planCap" type="number" value="700"></div>
+<div class="field"><label>Capacity Planning Year</label><input id="planYear" type="number" value="2030"></div>
+<div class="field"><label>DELAY (years)</label><input id="delay" type="number" value="2"></div>
+
+<!-- Internal labels retained for compatibility with the engine, but not exposed as extra controls. -->
+<input id="ifVar" type="hidden" value="Output / indikator utama">
+<input id="stepVar" type="hidden" value="Output / indikator utama">
+<input id="pulseVar" type="hidden" value="Output / indikator utama">
+<input id="delayVar" type="hidden" value="Kapasitas / efek intervensi">
+
+<button class="btn primary sd-run" id="runSim">▶ RUN SIMULATION</button>
+</div>
+<div class="card span8"><h2>Simulation Output</h2><p class="sub">V3 memakai panel dinamis: detail hanya muncul saat fungsi dibuka. <b>IF</b> = status/batas, <b>STEP</b> = intervensi permanen, <b>IMPULSE/PULSE</b> = intervensi sesaat. <b>Capacity Check</b> dan <b>Status</b> menunjukkan kondisi aktual tahun berjalan. Riwayat overload dicatat terpisah agar pemulihan kapasitas tetap terbaca.</p><div class="row" id="simKpis"></div><div class="hintbox" style="margin:10px 0 12px;line-height:1.65">
+<b>ⓘ Cara membaca hasil:</b>
+BAU = tanpa intervensi ·
+STEP = intervensi permanen mulai tahun tertentu ·
+PULSE = intervensi sesaat ·
+COMBO = gabungan STEP + PULSE + DELAY ·
+Stock % = pemakaian kapasitas ·
+Capacity = batas kemampuan sistem
+</div>
+<div id="simTable" class="empty">Run simulation.</div></div>
+</div>
+</section>
+
+<section id="scenario" class="tab">
+<div class="grid">
+<div class="card span4"><h2>Scenario Manager</h2><p class="sub">Scenario engine menggunakan hasil simulasi sebagai baseline lalu menerapkan intervensi yang sama dengan parameter yang dipilih.</p>
+<div class="field"><label>Scenario A — BAU</label><input value="Baseline / tanpa intervensi" disabled></div>
+<div class="field"><label>Scenario B — STEP</label><input value="Intervensi permanen" disabled></div>
+<div class="field"><label>Scenario C — PULSE</label><input value="Intervensi sesaat" disabled></div>
+<div class="field"><label>Scenario D — STEP + PULSE + DELAY</label><input value="Kombinasi" disabled></div>
+<button class="btn primary" id="runScenario">Compare Scenarios</button>
+</div>
+<div class="card span8"><h2>Scenario Comparison</h2><div id="scenarioTable" class="empty">Run simulation lalu compare.</div></div>
+</div>
+</section>
+
+<section id="graph" class="tab">
+<div class="grid">
+<div class="card span6"><h2>Stock / Primary Variable</h2><canvas id="chartStock"></canvas></div>
+<div class="card span6"><h2>Output / Waste / Dependent Variable</h2><canvas id="chartOutput"></canvas></div>
+<div class="card span6"><h2>Output vs Capacity</h2><p class="sub">ⓘ Node values aktif — angka observasi tampil langsung pada setiap titik grafik.</p><canvas id="chartCap"></canvas></div>
+<div class="card span6"><h2>Scenario Comparison</h2><canvas id="chartScenario"></canvas></div>
+</div>
+</section>
+
+<section id="analyzer" class="tab">
+<div class="grid">
+<div class="card span4"><h2>Analyzer</h2><div id="analysisKpis"></div></div>
+<div class="card span8"><h2>Interpretation</h2><div id="interpretation" class="sub">Run a model or simulation first.</div></div>
+<div class="card span12"><h2>Model Audit</h2><div id="audit" class="sub">DAC will report basic unit/logic checks and data conditions.</div></div>
+</div>
+</section>
+
+<section id="export" class="tab">
+<div class="grid">
+<div class="card span4"><h2>Export Center</h2><p class="sub">Export hasil kerja DAC. PDF mencakup tabel simulasi dan graph; Excel berisi input, parameter, simulasi, skenario, ringkasan, dan sheet Graphs berisi 4 grafik.</p><div class="row"><button class="btn primary" id="exportXlsx">Excel .xlsx</button><button class="btn" id="exportCsv">CSV</button><button class="btn" id="exportJson">JSON</button><button class="btn" id="exportPdf">PDF</button><button class="btn" id="printBtn">Print</button></div></div>
+<div class="card span8"><h2>Export Status</h2><div id="exportStatus" class="sub">Belum ada export.</div></div>
+</div>
+</section>
+</main>
+<footer>MIL DAC MASTER FINAL — Dynamic Analytics Calculator • Data • Analyze • Simulate • Decide</footer>
+
+<script>
+let data=[], headers=[], numeric=[], timeCol=null, currentModel='Auto', simRows=[], scenarios={}, charts={};
+const $=id=>document.getElementById(id);
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function fmt(n,d=2){return Number.isFinite(n)?n.toLocaleString('id-ID',{maximumFractionDigits:d}):'—'}
+function setTab(id){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id))}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+
+function loadRows(rows){
+ data=rows.filter(r=>r&&Object.keys(r).length).map(r=>{let o={};headers.forEach(h=>o[h]=r[h]);return o});
+ numeric=headers.filter(h=>data.some(r=>typeof r[h]==='number'&&Number.isFinite(r[h])));
+ timeCol=headers.find(h=>/year|tahun|date|tanggal|time|periode/i.test(h))||null;
+ $('kRows').textContent=data.length;$('kNum').textContent=numeric.length;$('kTime').textContent=timeCol||'—';
+ renderPreview(); renderSelectors(); detectModel(); updateStatsControls();
+ resetSimulationResults();
+ $('dataRunStatus').textContent=data.length?`Dataset siap dijalankan: ${data.length} observasi, ${numeric.length} variabel numerik.`:'Dataset kosong.';
+}
+function renderPreview(){
+ if(!data.length){$('dataPreview').innerHTML='<div class="empty">Belum ada dataset.</div>';return}
+ let hs=headers.slice(0,10), rs=data.slice(0,12);
+ let t='<div class="tablewrap"><table><thead><tr>'+hs.map(h=>'<th>'+esc(h)+'</th>').join('')+'</tr></thead><tbody>';
+ rs.forEach(r=>t+='<tr>'+hs.map(h=>'<td>'+esc(r[h])+'</td>').join('')+'</tr>');t+='</tbody></table></div>';
+ $('dataPreview').innerHTML=t;
+}
+function renderSelectors(){
+ const box=$('varSelectors');
+ if(!box)return;
+ if(!headers.length){box.textContent='Import data terlebih dahulu.';return}
+ box.innerHTML=headers.map(h=>`<span class="badge" style="margin:3px">${esc(h)} ${numeric.includes(h)?'· numeric':''}</span>`).join(' ');
+}
+function detectModel(){
+ let rec=[];
+ if(timeCol&&numeric.length>=1)rec.push('Time Series / Trend');
+ if(numeric.length>=2)rec.push('Correlation / Regression');
+ if(headers.some(h=>/group|kelompok|kategori|category/i.test(h))&&numeric.length>=1)rec.push('ANOVA');
+ if(numeric.length>=1)rec.push('Descriptive Statistics');
+ if(headers.some(h=>/population|penduduk|stock|stok|inventory|persediaan/i.test(h))&&numeric.some(h=>/growth|rate|pertumbuhan|produksi|flow|arus/i.test(h)))rec.push('Stock–Flow / Growth');
+ if(timeCol&&numeric.length===1)currentModel='Time Series';else if(numeric.length>=2)currentModel='Regression / Correlation';else currentModel='Descriptive';
+ $('kModel').textContent=currentModel;
+ $('recommendations').innerHTML=rec.length?rec.map((x,i)=>`<div style="margin:7px 0"><span class="badge">${i+1}</span> ${esc(x)}</div>`).join(''):'Belum cukup informasi untuk auto-detection.';
+}
+function parseCSV(text){
+ let lines=text.trim().split(/\r?\n/); if(!lines.length)return [];
+ let split=s=>s.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(x=>x.replace(/^"|"$/g,'').trim());
+ let hs=split(lines[0]); headers=hs;
+ return lines.slice(1).map(line=>{let a=split(line),o={};hs.forEach((h,i)=>{let v=a[i]??'';o[h]=v!==''&&!isNaN(v)?Number(v):v});return o});
+}
+if(!$('fileInput')) throw new Error('Data input element tidak ditemukan.');
+$('fileInput').onchange=async e=>{
+ let f=e.target.files[0];if(!f)return;
+ let buf=await f.arrayBuffer();
+ if(/\.csv$/i.test(f.name)){
+   let rows=parseCSV(new TextDecoder().decode(buf));
+   loadRows(rows);
+   if($('activeSheetInfo')){
+     $('activeSheetInfo').style.display='block';
+     $('activeSheetInfo').innerHTML='<b>DATASET AKTIF:</b> CSV · DAC memakai seluruh isi CSV sebagai sumber data.';
+   }
+ }else{
+   let wb=XLSX.read(buf,{type:'array'});
+   const bad=/^(parameters?|summary|scenario|simulation|model|settings?|metadata)$/i;
+   const preferred=/^(input\s*data|data|dataset|raw\s*data|actual|observations?)$/i;
+   let candidates=wb.SheetNames.map((name,idx)=>{
+     const ws=wb.Sheets[name];
+     const rows=XLSX.utils.sheet_to_json(ws,{defval:''});
+     const hs=rows.length?Object.keys(rows[0]):[];
+     const numericCount=hs.filter(h=>rows.some(r=>r[h]!==''&&!isNaN(r[h]))).length;
+     let score=0;
+     if(preferred.test(name.trim()))score+=1000;
+     if(bad.test(name.trim()))score-=1000;
+     if(rows.length>=3)score+=100;
+     if(hs.length>=2)score+=20;
+     if(numericCount>=1)score+=10;
+     if(hs.some(h=>/year|tahun|date|tanggal|time|periode/i.test(h)))score+=80;
+     return {name,rows,hs,score};
+   }).filter(c=>c.rows.length&&c.hs.length).sort((a,b)=>b.score-a.score);
+   const chosen=candidates[0];
+   if(!chosen){
+     headers=[];loadRows([]);
+   }else{
+     headers=chosen.hs;
+     let rows=chosen.rows;
+     rows.forEach(r=>headers.forEach(h=>{if(r[h]!==''&&!isNaN(r[h]))r[h]=Number(r[h])}));
+     loadRows(rows);
+     if($('activeSheetInfo')){
+       $('activeSheetInfo').style.display='block';
+       $('activeSheetInfo').innerHTML=`<b>DATASET AKTIF:</b> ${esc(chosen.name)} · DAC memakai sheet ini sebagai sumber Simulation/Statistics.`;
+     }
+   }
+ }
+ $('datasetName').value=f.name.replace(/\.[^.]+$/,'');
+};
+$('demoBtn').onclick=()=>{
+ headers=['Year','Population','Waste_kg_per_capita_day'];
+ data=[];
+ let p=680000;for(let y=2026;y<=2046;y++){if(y>2026)p*=1.012;data.push({Year:y,Population:Math.round(p),Waste_kg_per_capita_day:.70})}
+ loadRows(data);setTab('data');
+};
+$('clearBtn').onclick=()=>{
+  data=[];headers=[];numeric=[];timeCol=null;
+  $('datasetName').value='DAC_Dataset';
+  $('fileInput').value='';
+  if($('activeSheetInfo')){$('activeSheetInfo').style.display='none';$('activeSheetInfo').innerHTML='';}
+  loadRows([]);
+  $('simDataVar').innerHTML='<option value="">Auto — variabel utama</option>';
+  $('simDataVar').value='';
+  $('simStart').value=2026;
+  $('simEnd').value=2046;
+  $('simStock').value=0;
+  $('simGrowth').value=0;
+  resetSimulationResults();
+  
+};
+
+function updateStatsControls(){
+ let box=$('statControls');
+ if(!box)return;
+ if(!numeric.length){
+   box.innerHTML='<div class="hintbox">Belum ada variabel numerik. Import Excel/CSV atau Load Demo terlebih dahulu.</div>';
+   return;
+ }
+ let opts=numeric.map(h=>`<option value="${esc(h)}">${esc(h)}</option>`).join('');
+ box.innerHTML=`<div class="field"><label>Variable X</label><select id="sx">${opts}</select></div><div class="field"><label>Variable Y</label><select id="sy">${opts}</select></div><div class="field"><label>Group</label><select id="sg"><option value="">Auto</option>${headers.map(h=>`<option>${esc(h)}</option>`).join('')}</select></div>`;
+}
+function vals(h){return data.map(r=>Number(r[h])).filter(Number.isFinite)}
+function mean(a){return a.reduce((s,x)=>s+x,0)/a.length}
+function sd(a){let m=mean(a);return Math.sqrt(a.reduce((s,x)=>s+(x-m)**2,0)/(a.length-1||1))}
+function corr(a,b){let n=Math.min(a.length,b.length),ma=mean(a.slice(0,n)),mb=mean(b.slice(0,n)),num=0,da=0,db=0;for(let i=0;i<n;i++){let x=a[i]-ma,y=b[i]-mb;num+=x*y;da+=x*x;db+=y*y}return num/Math.sqrt(da*db)}
+function reg(x,y){let n=Math.min(x.length,y.length),mx=mean(x.slice(0,n)),my=mean(y.slice(0,n)),num=0,den=0;for(let i=0;i<n;i++){num+=(x[i]-mx)*(y[i]-my);den+=(x[i]-mx)**2}let b=num/den,a=my-b*mx;let r=corr(x.slice(0,n),y.slice(0,n));return {a,b,r2:r*r}}
+$('runStats').onclick=()=>{
+ if(!data.length){$('statResult').textContent='Import data terlebih dahulu.';$('statConclusion').textContent='Belum ada data untuk disimpulkan.';return}
+ if(!numeric.length){$('statResult').textContent='Tidak ada variabel numerik.';$('statConclusion').textContent='Kesimpulan belum dapat dibuat karena dataset tidak memiliki variabel numerik.';return}
+ let type=$('statType').value,x=vals($('sx').value),y=vals($('sy').value),out='',conclusion='';
+ if(type==='desc'){
+   let a=x,m=mean(a),s=sd(a),mn=Math.min(...a),mx=Math.max(...a);
+   out=`<div class="kpi">${fmt(m)}</div><p><b>${esc($('sx').value)}</b> · SD ${fmt(s)} · Min ${fmt(mn)} · Max ${fmt(mx)} · N ${a.length}</p>`;
+   conclusion=`Kesimpulan: nilai rata-rata <b>${fmt(m)}</b> pada ${esc($('sx').value)}, dengan rentang ${fmt(mn)}–${fmt(mx)}.`;
+ }
+ if(type==='corr'){
+   let r=corr(x,y), strength=Math.abs(r)>=.8?'sangat kuat':Math.abs(r)>=.6?'kuat':Math.abs(r)>=.4?'sedang':Math.abs(r)>=.2?'lemah':'sangat lemah',dir=r>0?'positif':r<0?'negatif':'tidak menunjukkan arah';
+   out=`<div class="kpi">r = ${fmt(r,4)}</div><p>Pearson correlation: <b>${esc($('sx').value)}</b> × <b>${esc($('sy').value)}</b>.</p>`;
+   conclusion=`Kesimpulan: hubungan linear terdeteksi <b>${strength}</b> dan ${dir} (r = ${fmt(r,4)}). Korelasi tidak dengan sendirinya membuktikan hubungan sebab-akibat.`;
+ }
+ if(type==='reg'){
+   let r=reg(x,y),strength=r.r2>=.8?'tinggi':r.r2>=.5?'sedang':'rendah';
+   out=`<div class="kpi">R² = ${fmt(r.r2,4)}</div><p>Persamaan: Y = ${fmt(r.a,4)} + ${fmt(r.b,4)}X</p>`;
+   conclusion=`Kesimpulan: model regresi memiliki kemampuan penjelasan <b>${strength}</b> dengan R² = ${fmt(r.r2,4)}. Koefisien X menunjukkan perubahan rata-rata Y sebesar ${fmt(r.b,4)} untuk setiap kenaikan 1 unit X.`;
+ }
+ if(type==='anova'){
+   let g=$('sg').value;
+   if(!g){out='Pilih kolom Group untuk ANOVA.';conclusion='Kesimpulan belum dapat dibuat. Pilih variabel Group terlebih dahulu.'}
+   else{
+     let groups={};
+     data.forEach(r=>{let k=r[g],v=Number(r[$('sy').value]);if(k!==''&&Number.isFinite(v))(groups[k]??=[]).push(v)});
+     let keys=Object.keys(groups),all=keys.flatMap(k=>groups[k]);
+     if(keys.length<2){out='ANOVA membutuhkan minimal 2 kelompok.';conclusion='Kesimpulan belum dapat dibuat karena kelompok kurang dari dua.'}
+     else{
+       let gm=mean(all),between=keys.reduce((s,k)=>s+groups[k].length*(mean(groups[k])-gm)**2,0)/(keys.length-1||1),within=keys.reduce((s,k)=>s+groups[k].reduce((q,v)=>q+(v-mean(groups[k]))**2,0),0)/(all.length-keys.length||1),F=between/within;
+       out=`<div class="kpi">F = ${fmt(F,4)}</div><p>Groups: ${keys.length} · N: ${all.length}. Engine menampilkan statistik F; p-value inferensial belum dihitung.</p>`;
+       conclusion=`Kesimpulan: terdapat perbedaan variasi antar-kelompok yang tercermin dari F = ${fmt(F,4)}. Untuk keputusan signifikansi statistik, gunakan p-value/critical F melalui perangkat inferensial yang sesuai.`;
+     }
+   }
+ }
+ $('statResult').innerHTML=out;
+ $('statConclusion').innerHTML=conclusion;
+};
+
+
+document.querySelectorAll('[data-sd-toggle]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const id=btn.getAttribute('data-sd-toggle');
+    const el=$(id);
+    if(el)el.classList.toggle('open');
+  });
+});
+
+function syncDynamicSummaries(){
+  const ifv=$('ifVar')?.value||'Output / indikator utama';
+  const cap=$('simCap')?.value||'—';
+  const sv=$('stepVar')?.value||'Output / indikator utama';
+  const sy=$('stepYear')?.value||'—';
+  const sp=$('stepPct')?.value||'0';
+  const pv=$('pulseVar')?.value||'Output / indikator utama';
+  const py=$('pulseYear')?.value||'—';
+  const pp=$('pulsePct')?.value||'0';
+  const dv=$('delayVar')?.value||'Kapasitas / efek intervensi';
+  const dd=$('delay')?.value||'0';
+  if($('sdIfSummary'))$('sdIfSummary').textContent=`${ifv} · Limit ${cap}`;
+  if($('sdStepSummary'))$('sdStepSummary').textContent=`${sv} · ${sy} · ${Number(sp)>=0?'−':''}${Math.abs(Number(sp))}%`;
+  if($('sdPulseSummary'))$('sdPulseSummary').textContent=`${pv} · ${py} · ${Number(pp)>=0?'−':''}${Math.abs(Number(pp))}%`;
+  if($('sdDelaySummary'))$('sdDelaySummary').textContent=`${dv} · ${dd} tahun`;
+}
+['ifVar','simCap','stepVar','stepYear','stepPct','pulseVar','pulseYear','pulsePct','delayVar','delay'].forEach(id=>{
+  const el=$(id); if(el)el.addEventListener('input',syncDynamicSummaries);
+});
+syncDynamicSummaries();
+
+
+
+
+function resetSimulationResults(){
+  simRows=[]; scenarios={};
+  destroyCharts();
+  if($('simTable'))$('simTable').innerHTML='<div class="empty">Dataset berubah. Jalankan simulation untuk menghitung ulang.</div>';
+  if($('simKpis'))$('simKpis').innerHTML='';
+  if($('scenarioTable'))$('scenarioTable').innerHTML='<div class="empty">Run simulation lalu compare.</div>';
+  if($('analysisKpis'))$('analysisKpis').innerHTML='';
+  if($('interpretation'))$('interpretation').textContent='Dataset berubah. Run simulation untuk memperbarui analyzer.';
+  if($('audit'))$('audit').textContent='Menunggu simulation baru.';
+}
+
+function bindSimulationToData(){
+  syncDataBindingSummary?.();
+}
+
+function getSimulationSource(){
+  const source=$('simDataVar')?.value;
+  if(!source || !data.length)return null;
+  const map=new Map();
+  data.forEach(r=>{
+    const y=timeCol?Number(r[timeCol]):NaN;
+    const v=Number(r[source]);
+    if(Number.isFinite(y)&&Number.isFinite(v))map.set(y,v);
+  });
+  return map.size?map:null;
+}
+
+function syncDataBindingSummary(){
+  const s=$('simDataVar')?.value;
+  if($('sdDataSummary'))$('sdDataSummary').textContent=s?`Dataset · ${s}`:'Auto · data utama';
+}
+
+function runSimulation(){
+  let sy=+$('simStart').value,ey=+$('simEnd').value,p=+$('simStock').value,g=+$('simGrowth').value/100,w=+$('simOutput').value,cap=+$('simCap').value,stepY=+$('stepYear').value,stepP=+$('stepPct').value/100,pulseY=+$('pulseYear').value,pulseP=+$('pulsePct').value/100,pcap=+$('planCap').value,py=+$('planYear').value,delay=+$('delay').value;
+  const sourceMap=getSimulationSource();
+  simRows=[];
+  let overloadLatched=false;
+  let previousObserved=null;
+  for(let y=sy;y<=ey;y++){
+    let observed=sourceMap?.get(y);
+    if(Number.isFinite(observed)){
+      p=observed;
+      previousObserved=observed;
+    }else if(y>sy){
+      p*=1+g;
+    }
+    let bau=p*w/1000;
+    let step=y>=stepY?bau*(1-stepP):bau;
+    let pulse=y===pulseY?bau*(1-pulseP):bau;
+    let combo=y>=stepY?bau*(1-stepP):bau;
+    if(y===pulseY)combo*=1-pulseP;
+    let effectiveCap=y>=py+delay?pcap:cap; const overNow=bau>effectiveCap; if(overNow) overloadLatched=true; simRows.push({ Year:y,Stock:p,BAU:bau,STEP:step,PULSE:pulse,COMBO:combo, Capacity:effectiveCap,Status:overNow?'OVERLOAD':'CONTROLLED', CapacityCheck:overNow?'OVER CAPACITY':'WITHIN CAPACITY', OverloadHistory:overloadLatched?'PREVIOUS OVERLOAD':'NO PREVIOUS OVERLOAD' });
+  }
+  scenarios={BAU:simRows.map(r=>r.BAU),STEP:simRows.map(r=>r.STEP),PULSE:simRows.map(r=>r.PULSE),COMBO:simRows.map(r=>r.COMBO)};
+  renderSim();renderCharts();renderAnalyzer();setTab('simulation');
+}
+
+$('runSim').onclick=runSimulation;
+
+function renderSim(){
+ let first=simRows.find(r=>r.Status==='OVERLOAD'),last=simRows.at(-1);
+ $('simKpis').innerHTML=`<div class="badge">IF / STATUS: <b>${esc($('ifVar')?.value||'Output / indikator utama')}</b></div><div class="badge">STEP: <b>${esc($('stepVar')?.value||'Output / indikator utama')}</b></div><div class="badge">IMPULSE: <b>${esc($('pulseVar')?.value||'Output / indikator utama')}</b></div><div class="badge">Final Stock: <b>${fmt(last.Stock,0)}</b></div><div class="badge">Final Output: <b>${fmt(last.BAU,2)}</b></div><div class="badge">First Overload: <b>${first?first.Year:'None'}</b></div><div class="badge ${last.Status==='OVERLOAD'?'danger':'ok'}">Status: <b>${last.Status}</b></div>`;
+ let hs=['Year','Stock','BAU','STEP','PULSE','COMBO','Capacity','Stock %','Capacity Check','Status'];let t='<div class="tablewrap"><table><thead><tr>'+hs.map(h=>{const tips={BAU:'Kondisi tanpa intervensi',STEP:'Intervensi permanen mulai tahun tertentu',PULSE:'Intervensi sesaat',COMBO:'Gabungan STEP + PULSE + DELAY','Stock %':'Pemakaian kapasitas',Capacity:'Batas kemampuan sistem'};return `<th title="${tips[h]||''}">${h}</th>`}).join('')+'</tr></thead><tbody>';
+ simRows.forEach(r=>{let stockPct=r.Capacity>0?(r.BAU/r.Capacity*100):0;t+=`<tr><td>${r.Year}</td><td>${fmt(r.Stock,0)}</td><td>${fmt(r.BAU,2)}</td><td>${fmt(r.STEP,2)}</td><td>${fmt(r.PULSE,2)}</td><td>${fmt(r.COMBO,2)}</td><td>${fmt(r.Capacity,2)}</td><td class="${stockPct>100?'danger':stockPct>=90?'warn':'ok'}">${fmt(stockPct,1)}%</td><td class="${r.CapacityCheck==='OVER CAPACITY'?'danger':'ok'}">${r.CapacityCheck}</td><td class="${r.Status==='OVERLOAD'?'danger':'ok'}">${r.Status}</td></tr>`;});
+ $('simTable').innerHTML=t+'</tbody></table></div>';
+}
+function destroyCharts(){Object.values(charts).forEach(c=>c&&c.destroy());charts={}}
+
+const nodeValueLabels = {
+  id:'nodeValueLabels',
+  afterDatasetsDraw(chart){
+    const ctx=chart.ctx;
+    ctx.save();
+    ctx.font='600 8px Arial';
+    ctx.textAlign='center';
+    ctx.textBaseline='bottom';
+    chart.data.datasets.forEach((ds,di)=>{
+      const meta=chart.getDatasetMeta(di);
+      if(meta.hidden)return;
+      meta.data.forEach((pt,i)=>{
+        const raw=ds.data?.[i];
+        const v=Number(raw);
+        if(!Number.isFinite(v))return;
+        const props=pt.getProps(['x','y'],true);
+        if(!Number.isFinite(props.x)||!Number.isFinite(props.y))return;
+        // Keep labels inside the plotting area as much as possible.
+        const text=(Math.abs(v)>=1000)?v.toLocaleString('en-US',{maximumFractionDigits:0}):
+          (Math.abs(v)>=100)?v.toLocaleString('en-US',{maximumFractionDigits:1}):
+          v.toLocaleString('en-US',{maximumFractionDigits:2});
+        ctx.fillStyle=ds.borderColor || '#ffffff';
+        ctx.fillText(text,props.x,props.y-6);
+      });
+    });
+    ctx.restore();
+  }
+};
+Chart.register(nodeValueLabels);
+
+function makeChart(id,type,labels,datasets){
+ const palette=['#36A2EB','#FF6384','#FF9F40','#FFCD56'];
+ datasets=datasets.map((d,i)=>({...d,borderColor:palette[i%palette.length],backgroundColor:palette[i%palette.length],pointBackgroundColor:palette[i%palette.length],pointBorderColor:palette[i%palette.length],borderWidth:2,fill:false}));
+ charts[id]=new Chart($(id),{type,data:{labels,datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#cfe0e5'}}},scales:{x:{ticks:{color:'#8da7b1'},grid:{color:'#17303b'}},y:{ticks:{color:'#8da7b1'},grid:{color:'#17303b'}}}}})
+}
+function renderCharts(){if(!simRows.length)return;destroyCharts();let L=simRows.map(r=>r.Year);makeChart('chartStock','line',L,[{label:'Stock',data:simRows.map(r=>r.Stock),tension:.25}]);makeChart('chartOutput','line',L,[{label:'BAU',data:simRows.map(r=>r.BAU),tension:.25},{label:'STEP',data:simRows.map(r=>r.STEP),tension:.25},{label:'PULSE',data:simRows.map(r=>r.PULSE),tension:.25}]);makeChart('chartCap','line',L,[{label:'Output BAU',data:simRows.map(r=>r.BAU),tension:.25},{label:'Capacity',data:simRows.map(r=>r.Capacity),tension:.25}]);makeChart('chartScenario','line',L,[{label:'BAU',data:simRows.map(r=>r.BAU),tension:.25},{label:'STEP',data:simRows.map(r=>r.STEP),tension:.25},{label:'PULSE',data:simRows.map(r=>r.PULSE),tension:.25},{label:'STEP+PULSE+DELAY',data:simRows.map(r=>r.COMBO),tension:.25}])}
+$('runScenario').onclick=()=>{runSimulation();renderScenario()};
+function renderScenario(){let L=simRows.map(r=>r.Year),last=simRows.at(-1),rows=[['BAU',last.BAU,0],['STEP',last.STEP,(1-last.STEP/last.BAU)*100],['PULSE',last.PULSE,(1-last.PULSE/last.BAU)*100],['STEP + PULSE + DELAY',last.COMBO,(1-last.COMBO/last.BAU)*100]];$('scenarioTable').innerHTML='<div class="tablewrap"><table><thead><tr><th>Scenario</th><th>Final Output</th><th>Reduction vs BAU</th></tr></thead><tbody>'+rows.map(r=>`<tr><td>${r[0]}</td><td>${fmt(r[1],2)}</td><td>${fmt(r[2],2)}%</td></tr>`).join('')+'</tbody></table></div>';setTab('scenario');renderCharts()}
+function renderAnalyzer(){if(!simRows.length)return;let f=simRows.find(r=>r.Status==='OVERLOAD'),first=simRows[0],last=simRows.at(-1),growth=(last.Stock/first.Stock-1)*100;let reduction=(1-last.STEP/last.BAU)*100;$('analysisKpis').innerHTML=`<p>Initial Stock<br><b>${fmt(first.Stock,0)}</b></p><p>Final Stock<br><b>${fmt(last.Stock,0)}</b></p><p>Stock Change<br><b>${fmt(growth,2)}%</b></p><p>Final BAU Output<br><b>${fmt(last.BAU,2)}</b></p><p>STEP Reduction<br><b>${fmt(reduction,2)}%</b></p><p>First Overload<br><b>${f?f.Year:'None'}</b></p>`;$('interpretation').innerHTML=`<p>Selama periode simulasi, stock utama berubah dari <b>${fmt(first.Stock,0)}</b> menjadi <b>${fmt(last.Stock,0)}</b>, atau ${fmt(growth,2)}%.</p><p>Output BAU berubah dari <b>${fmt(first.BAU,2)}</b> menjadi <b>${fmt(last.BAU,2)}</b>. ${f?`Kapasitas terlampaui mulai ${f.Year}.`:'Kapasitas belum terlampaui dalam periode simulasi.'}</p><p>STEP menghasilkan output akhir ${fmt(last.STEP,2)}, sekitar ${fmt(reduction,2)}% lebih rendah daripada BAU.</p>`;$('audit').innerHTML=`<ul><li>Periode simulasi: ${first.Year}–${last.Year}.</li><li>DELAY: kapasitas rencana ${fmt(+$('planCap').value,0)} efektif mulai tahun ${+$('planYear').value + +$('delay').value}.</li><li>IF/STATUS: variabel yang dipantau adalah <b>${esc($('ifVar')?.value||'Output / indikator utama')}</b>, dibandingkan dengan IF / STATUS LIMIT.</li><li>STEP: <b>${esc($('stepVar')?.value||'Output / indikator utama')}</b> diberi intervensi permanen mulai tahun STEP.</li><li>IMPULSE/PULSE: <b>${esc($('pulseVar')?.value||'Output / indikator utama')}</b> diberi intervensi sesaat pada tahun IMPULSE/PULSE.</li><li>Setelah overload pertama, status sistem di-latch sebagai OVERLOAD hingga akhir simulasi.</li><li>Catatan: engine V1 adalah simulator konseptual browser, bukan interpreter sintaks PowerSim.</li></ul>`}
+
+
+
+
+async function ensureExcelJS(){
+  if(typeof ExcelJS!=='undefined') return true;
+  $('exportStatus').textContent='Memuat Excel engine…';
+  return await new Promise((resolve)=>{
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js';
+    s.onload=()=>resolve(typeof ExcelJS!=='undefined');
+    s.onerror=()=>resolve(false);
+    document.head.appendChild(s);
+  });
+}
+
+async function exportWorkbook(){
+  runSimulation();
+  if(!simRows.length){
+    setTab('export');
+    $('exportStatus').textContent='Simulation belum menghasilkan data.';
+    return;
+  }
+
+  // Chart.js needs a visible canvas with real dimensions before exporting.
+  setTab('graph');
+  renderCharts();
+  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+  Object.values(charts).forEach(c=>{try{c.resize();c.update('none')}catch(e){}});
+  await new Promise(resolve=>requestAnimationFrame(resolve));
+
+  if(!(await ensureExcelJS())){
+    setTab('export');
+    $('exportStatus').textContent='Excel engine gagal dimuat. Pastikan internet aktif, lalu klik Excel lagi.';
+    return;
+  }
+
+  try{
+    const wb=new ExcelJS.Workbook();
+    wb.creator='MIL L2011261001 Labs';
+    wb.created=new Date();
+    wb.modified=new Date();
+    wb.properties.title='MIL DAC — Dynamic Analytics Engine';
+    wb.properties.subject='Data • Analyze • Simulate • Decide';
+
+    const addRows=(ws,rows)=>{
+      rows.forEach(row=>ws.addRow(row));
+      ws.getRow(1).font={bold:true,color:{argb:'FFFFFFFF'}};
+      ws.getRow(1).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF173B4B'}};
+      ws.columns.forEach(c=>{c.width=Math.min(28,Math.max(12,(c.header||'').toString().length+4));});
+      ws.views=[{state:'frozen',ySplit:1}];
+    };
+
+    let ws=wb.addWorksheet('Parameters');
+    addRows(ws,[
+      ['Parameter','Value'],
+      ['Dataset',$('datasetName').value],
+      ['Model',currentModel],
+      ['Start Year',+$('simStart').value],
+      ['End Year',+$('simEnd').value],
+      ['Initial Stock',+$('simStock').value],
+      ['Growth Rate (%)',+$('simGrowth').value],
+      ['Output per Stock Unit',+$('simOutput').value],
+      ['Output Conversion / Unit',+$('simConv')?.value || 1],
+      ['Capacity',+$('simCap').value],
+      ['STEP Start Year',+$('stepYear').value],
+      ['STEP Reduction (%)',+$('stepPct').value],
+      ['PULSE Year',+$('pulseYear').value],
+      ['PULSE Reduction (%)',+$('pulsePct').value],
+      ['Planned Capacity',+$('planCap').value],
+      ['Capacity Planning Year',+$('planYear').value],
+      ['DELAY (years)',+$('delay').value]
+    ]);
+
+    if(data.length){
+      ws=wb.addWorksheet('Input Data');
+      const hs=headers.length?headers:Object.keys(data[0]||{});
+      addRows(ws,[hs,...data.map(r=>hs.map(h=>r[h]))]);
+    }
+
+    ws=wb.addWorksheet('Simulation');
+    const simHeaders=['Year','Stock','BAU','STEP','PULSE','COMBO','Capacity','Stock %','Capacity Check','Status','Overload History'];
+    const simData=simRows.map(r=>[
+      r.Year,r.Stock,r.BAU,r.STEP,r.PULSE,r.COMBO,r.Capacity,
+      r.Capacity>0?r.BAU/r.Capacity*100:0,
+      r.CapacityCheck,r.Status,r.OverloadHistory||'NO PREVIOUS OVERLOAD'
+    ]);
+    addRows(ws,[simHeaders,...simData]);
+    ws.getColumn(8).numFmt='0.0"%"';
+
+    const last=simRows.at(-1);
+    ws=wb.addWorksheet('Scenario');
+    addRows(ws,[
+      ['Scenario','Final Output','Reduction vs BAU'],
+      ['BAU',last.BAU,0],
+      ['STEP',last.STEP,1-last.STEP/last.BAU],
+      ['PULSE',last.PULSE,1-last.PULSE/last.BAU],
+      ['STEP+PULSE+DELAY',last.COMBO,1-last.COMBO/last.BAU]
+    ]);
+    ws.getColumn(3).numFmt='0.0%';
+
+    ws=wb.addWorksheet('Summary');
+    addRows(ws,[
+      ['Metric','Value'],
+      ['Final Stock',last.Stock],
+      ['Final BAU Output',last.BAU],
+      ['Final Capacity',last.Capacity],
+      ['Final Status',last.Status],
+      ['Final Capacity Check',last.CapacityCheck],
+      ['Overload History',last.OverloadHistory||'NO PREVIOUS OVERLOAD']
+    ]);
+
+    // Real embedded graph images: Excel opens them as native worksheet images.
+    const graphSheet=wb.addWorksheet('Graphs');
+    graphSheet.getColumn(1).width=3;
+    graphSheet.getColumn(2).width=15;
+    graphSheet.getColumn(10).width=15;
+    graphSheet.getRow(1).height=24;
+    graphSheet.getCell('B1').value='MIL DAC — Simulation Graphs';
+    graphSheet.getCell('B1').font={bold:true,size:16,color:{argb:'FF173B4B'}};
+
+    const graphDefs=[
+      ['chartStock','Stock / Primary Variable','B3:J20'],
+      ['chartOutput','Output / Waste / Dependent Variable','L3:T20'],
+      ['chartCap','Output vs Capacity','B23:J40'],
+      ['chartScenario','Scenario Comparison','L23:T40']
+    ];
+
+    graphDefs.forEach(([id,title,range])=>{
+      const chart=charts[id];
+      if(chart && typeof chart.toBase64Image==='function'){
+        const dataUri=(typeof chart.toBase64Image==='function')
+          ? chart.toBase64Image('image/png',1.0)
+          : chart.canvas.toDataURL('image/png',1.0);
+        const base64=dataUri.includes(',')?dataUri.split(',')[1]:dataUri;
+        if(!base64 || base64.length<100){
+          throw new Error('Grafik '+title+' tidak menghasilkan image data yang valid.');
+        }
+        const imageId=wb.addImage({base64,extension:'png'});
+        const parts=range.split(':');
+        const topLeft=parts[0],bottomRight=parts[1];
+        const row=parseInt(topLeft.match(/\d+/)[0],10);
+        graphSheet.getCell(topLeft).value=title;
+        graphSheet.getCell(topLeft).font={bold:true,size:11};
+        graphSheet.addImage(imageId,{tl:{col:colNum(topLeft)-1,row:row},br:{col:colNum(bottomRight),row:parseInt(bottomRight.match(/\d+/)[0],10)}});
+      }
+    });
+
+    // Helper used above to convert Excel column letters to zero-based indexes.
+    function colNum(a1){
+      const letters=a1.match(/[A-Z]+/i)[0].toUpperCase();
+      let n=0;
+      for(const ch of letters)n=n*26+ch.charCodeAt(0)-64;
+      return n;
+    }
+
+    graphSheet.getCell('B42').value='Catatan';
+    graphSheet.getCell('B42').font={bold:true};
+    graphSheet.getCell('B43').value='Grafik menggunakan hasil Simulation yang sama dengan tabel Simulation.';
+    graphSheet.getCell('B44').value='Node values ditampilkan pada grafik untuk memudahkan pembacaan nilai per tahun.';
+
+    const buffer=await wb.xlsx.writeBuffer();
+    const blob=new Blob([buffer],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=($('datasetName').value||'MIL_DAC')+'_RESULT_WITH_GRAPHS.xlsx';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+    $('exportStatus').textContent='Excel berhasil dibuat lengkap dengan sheet Graphs dan 4 grafik.';
+  }catch(err){
+    console.error(err);
+    $('exportStatus').textContent='Export Excel gagal: '+(err?.message||err);
+  }finally{
+    setTab('export');
+  }
+}
+$('exportXlsx').onclick=(ev)=>{
+  ev.preventDefault();
+  exportWorkbook().catch(err=>{
+    console.error(err);
+    $('exportStatus').textContent='Export Excel gagal: '+(err?.message||err);
+  });
+};
+$('exportCsv').onclick=()=>{runSimulation();setTab('export');let csv=XLSX.utils.sheet_to_csv(XLSX.utils.json_to_sheet(simRows));downloadBlob(csv,'DAC_SIMULATION.csv','text/csv');$('exportStatus').textContent='CSV berhasil dibuat.'};
+$('exportJson').onclick=()=>{setTab('export');let payload={app:'DAC V3.2',dataset:$('datasetName').value,model:currentModel,rows:data,simulation:simRows};downloadBlob(JSON.stringify(payload,null,2),'DAC_PROJECT.json','application/json');$('exportStatus').textContent='JSON project berhasil dibuat.'};
+$('exportPdf').onclick=()=>{
+ runSimulation();
+ const {jsPDF}=window.jspdf;
+ let doc=new jsPDF('l','mm','a4');
+ const W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight();
+ const margin=12;
+
+ // Page 1 — summary + simulation table
+ doc.setFontSize(16);
+ doc.text('MIL DYNAMIC ANALYTICS CALCULATOR — DAC',margin,14);
+ doc.setFontSize(9);
+ doc.text('Flexible Data-Driven Modeling, Simulation & Statistical Analysis Engine',margin,21);
+ doc.text('Dataset: '+($('datasetName').value||'Untitled Dataset'),margin,27);
+ doc.setFontSize(8);
+ doc.text('BAU = tanpa intervensi · STEP = intervensi permanen · PULSE = intervensi sesaat · COMBO = STEP + PULSE + DELAY',margin,33);
+ doc.text('Stock % = pemakaian kapasitas · Capacity = batas kemampuan sistem',margin,38);
+
+ doc.autoTable({
+   startY:43,
+   head:[['Year','Stock','BAU','STEP','PULSE','COMBO','Capacity','Stock %','Capacity Check','Status']],
+   body:simRows.map(r=>[
+     r.Year,fmt(r.Stock,0),fmt(r.BAU,2),fmt(r.STEP,2),fmt(r.PULSE,2),fmt(r.COMBO,2),
+     fmt(r.Capacity,2),fmt(r.Capacity>0?r.BAU/r.Capacity*100:0,1)+'%',
+     r.CapacityCheck,r.Status
+   ]),
+   styles:{fontSize:6,cellPadding:2},
+   headStyles:{fontSize:6}
+ });
+
+ // Pages 2+ — native PDF graphs.
+// Draw directly from simRows with jsPDF so export does not depend on
+// browser canvas visibility, Chart.js rendering state, or active tabs.
+function pdfNiceStep(range){
+  if(!Number.isFinite(range)||range<=0)return 1;
+  const raw=range/5, p=Math.pow(10,Math.floor(Math.log10(raw)));
+  const n=raw/p;
+  const m=n<=1?1:n<=2?2:n<=5?5:10;
+  return m*p;
+}
+function pdfNiceStep(range){
+  if(!Number.isFinite(range)||range<=0)return 1;
+  const raw=range/5, p=Math.pow(10,Math.floor(Math.log10(raw)));
+  const n=raw/p;
+  const m=n<=1?1:n<=2?2:n<=5?5:10;
+  return m*p;
+}
+function pdfNodeText(v){
+  if(!Number.isFinite(v))return '';
+  if(Math.abs(v)>=1000)return v.toLocaleString('en-US',{maximumFractionDigits:0});
+  if(Math.abs(v)>=100)return v.toLocaleString('en-US',{maximumFractionDigits:1});
+  return v.toLocaleString('en-US',{maximumFractionDigits:2});
+}
+function pdfLineGraph(doc,title,series,labels,x0,y0,w,h){
+  const all=series.flatMap(s=>s.data||[]).filter(Number.isFinite);
+  if(!all.length)return;
+  const rawMin=Math.min(...all), rawMax=Math.max(...all);
+  const range=(rawMax-rawMin)||Math.max(1,Math.abs(rawMax)*.05);
+  const step=pdfNiceStep(range);
+  let ymin=Math.floor(rawMin/step)*step;
+  let ymax=Math.ceil(rawMax/step)*step;
+  if(ymin===ymax){ymin-=step;ymax+=step;}
+  const yrange=ymax-ymin;
+  const left=x0+22, top=y0+9, pw=w-28, ph=h-27;
+
+  doc.setFontSize(10); doc.setTextColor(30); doc.text(title,x0,y0);
+  doc.setDrawColor(205); doc.rect(left,top,pw,ph);
+
+  doc.setFontSize(6);
+  for(let k=0;k<=4;k++){
+    const yy=top+ph-(k/4)*ph;
+    const val=ymin+(k/4)*yrange;
+    doc.setDrawColor(225); doc.line(left,yy,left+pw,yy);
+    doc.setTextColor(90); doc.text(fmt(val,1),x0,yy+2);
+  }
+
+  const n=Array.isArray(labels)?labels.length:0;
+  const xstep=n>1?pw/(n-1):pw;
+  for(let i=0;i<n;i++){
+    if(i===0||i===n-1||i%Math.max(1,Math.ceil(n/10))===0){
+      const xx=left+i*xstep;
+      doc.setTextColor(90); doc.text(String(labels[i]),xx-5,top+ph+9);
+    }
+  }
+
+  const palette=[
+    [54,162,235],   // BAU / blue
+    [255,99,132],   // STEP / pink
+    [255,159,64],   // PULSE / orange
+    [255,205,86]    // COMBO / yellow
+  ];
+
+  series.forEach((s,si)=>{
+    const vals=s.data||[];
+    if(!vals.length)return;
+    const rgb=palette[si%palette.length];
+
+    // line
+    doc.setDrawColor(...rgb);
+    doc.setLineWidth(0.7);
+    for(let i=1;i<vals.length;i++){
+      if(!Number.isFinite(vals[i-1])||!Number.isFinite(vals[i]))continue;
+      const x1=left+(i-1)*xstep, x2=left+i*xstep;
+      const y1=top+ph-((vals[i-1]-ymin)/yrange)*ph;
+      const y2=top+ph-((vals[i]-ymin)/yrange)*ph;
+      doc.line(x1,y1,x2,y2);
+    }
+
+    // node + value, matching the on-screen node-value behavior
+    doc.setFontSize(5.8);
+    doc.setTextColor(...rgb);
+    for(let i=0;i<vals.length;i++){
+      const v=Number(vals[i]);
+      if(!Number.isFinite(v))continue;
+      const xx=left+i*xstep;
+      const yy=top+ph-((v-ymin)/yrange)*ph;
+
+      doc.setFillColor(...rgb);
+      doc.circle(xx,yy,1.15,'F');
+
+      const label=pdfNodeText(v);
+      // Alternate label position for very close series to reduce collisions.
+      const labelY=yy-3-(si%2)*3;
+      doc.text(label,xx-3.5,labelY);
+    }
+
+    // legend
+    const lx=x0+18+si*34, ly=y0+h-3;
+    doc.setDrawColor(...rgb); doc.line(lx,ly,lx+8,ly);
+    doc.setTextColor(70); doc.setFontSize(6); doc.text(s.label,lx+10,ly+2);
+  });
+
+  doc.setTextColor(0);
+  doc.setLineWidth(0.2);
+}
+
+const L=simRows.map(r=>r.Year);
+doc.addPage();
+pdfLineGraph(doc,'Stock / Primary Variable',[
+  {label:'Stock',data:simRows.map(r=>r.Stock)}
+],L,12,18,130,78);
+pdfLineGraph(doc,'Output / Waste / Dependent Variable',[
+  {label:'BAU',data:simRows.map(r=>r.BAU)},
+  {label:'STEP',data:simRows.map(r=>r.STEP)},
+  {label:'PULSE',data:simRows.map(r=>r.PULSE)}
+],L,153,18,130,78);
+
+doc.addPage();
+pdfLineGraph(doc,'Output vs Capacity',[
+  {label:'BAU',data:simRows.map(r=>r.BAU)},
+  {label:'Capacity',data:simRows.map(r=>r.Capacity)}
+],L,12,18,130,78);
+pdfLineGraph(doc,'Scenario Comparison — BAU / STEP / PULSE / COMBO',[
+  {label:'BAU',data:simRows.map(r=>r.BAU)},
+  {label:'STEP',data:simRows.map(r=>r.STEP)},
+  {label:'PULSE',data:simRows.map(r=>r.PULSE)},
+  {label:'STEP+PULSE+DELAY',data:simRows.map(r=>r.COMBO)}
+],L,153,18,130,78);
+
+doc.save('MIL_DAC_MASTER_FINAL_2026_CAPACITY_LOGIC_FINAL_FIXED.pdf');
+ $('exportStatus').textContent='PDF berhasil dibuat lengkap dengan tabel simulasi dan 4 graph.';
+};
+$('printBtn').onclick=()=>window.print();
+function downloadBlob(content,name,type){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+loadRows([]);
+</script>
+<div style="text-align:center;padding:12px 16px;font-size:12px;opacity:.72">MIL L2011261001 Labs • Dynamic Analytics Engine • 2026</div></body>
+</html>
